@@ -25,7 +25,7 @@ SECRET_KEY = 'v#pfu^cqcgpl&$=kyte+mxyr_$dc+^x1b=ojy9u9kmqqab60bb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.haenisch.de']
+ALLOWED_HOSTS = ['127.0.0.1', '.haenisch.de', 'mighty-fortress-53031.herokuapp.com']
 
 
 # Application definition
