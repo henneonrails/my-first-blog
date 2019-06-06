@@ -1,0 +1,32 @@
+{% extends 'schichtplan/base.html' %}
+
+{% block content %}
+<h2>Aktuelle Schicht</h2>
+<div class="row">
+
+
+  <div class="col-sm-4">
+    <table class="table table-bordered">
+      <tr>
+        {% for date in dateSet %}
+        <td>{{ date.datum  }}</td>
+        {% endfor %}
+      </tr>
+      
+
+      <tr>
+        {% for date in dateSet %}
+        <td>{{ date.schicht }}</td>
+        {% endfor %}
+      </tr>
+
+    </table>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-sm-4">
+    <a href="/">Schichtplan</a>
+  </div>
+</div>
+{% endblock %}

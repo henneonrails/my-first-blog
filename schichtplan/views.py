@@ -16,8 +16,9 @@ def schichtplan_list(request):
 
 def schichtplan_today(request):
     today = datetime.date.today()
-    dateSet = searchShiftForDate(today)
+    dateSet = calculateShiftForDate(today)
     context = {'dateSet': dateSet}
+    print(context)
     template = 'schichtplan/today.html'
     return render(request, template, context)
 
@@ -26,12 +27,19 @@ def schichtplan_detail(request):
     return 0
 
 
-def calculate_schicht(datum_locl):
-    # datum = date object
-    querySchichtplan = Schichtplan.objects.filter(datum=datum_locl)
-    if querySchichtplan:
-        return querySchichtplan.schicht
-    return "nix"
+def calculateShiftForDate(date):
+    shiftValue = searchShiftForDate(date)
+    # erzeuge einen neuen Schichtplan Eintrag mit dem Ergebenis
+    # der Schichten Suche
+    newShift = Schichtplan(datum=date, schicht=shiftValue)
+    ## erzeuge ein Array mit zwei Tagen davor und zwei Tagen dahinter
+    arrayShift = [newShift]
+    newDate = date + timedelta(days=1)
+    arrayShift.append(Schichtplan(
+        datum=newDate,
+        schicht=searchShiftForDate(newDate))
+                                )
+    return arrayShift
 
 
 def buildDateArray(date):
@@ -49,13 +57,14 @@ def searchShiftForDate(date):
     schichtplan = Schichtplan.objects.filter(datum=date)
     print(date)
     if schichtplan:
-        print(schichtplan)
-        return schichtplan
+        print('return value')
+        print(schichtplan.first().schicht)
+        return schichtplan.first().schicht
 
     # Überprüfe ob übergebenes Datum ist kleiner als das Datum
     # des ersten Schichtplandatums
     myquery = Schichtplan.objects.order_by('datum')[0]
     if date < myquery.datum:
-        searchShiftForDate(date + interval)
+        return searchShiftForDate(date + interval)
     else:
-        searchShiftForDate(date - interval)
+        return searchShiftForDate(date - interval)

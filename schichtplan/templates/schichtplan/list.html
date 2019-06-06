@@ -1,12 +1,13 @@
 {% extends 'schichtplan/base.html' %}
 
 {% block content %}
-    <h2>Schichtplan</h2>
-    {% for date in dateSet %}
-        <div>
-            <div>
-                {{ date.datum  }} - {{ date.schicht }}
-            </div>
-        </div>
-    {% endfor %}
+<h2>Schichtplan</h2>
+{% for date in dateSet %}
+<div class="row">
+  <div class="col-sm-4">
+    {{ date.datum  }} - {{ date.schicht }} - {{ date.schichtmeister }}
+  </div>
+</div>
+{% endfor %}
+
 {% endblock %}

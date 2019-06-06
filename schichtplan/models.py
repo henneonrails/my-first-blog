@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
 
 
 class Schichtplan(models.Model):
@@ -6,6 +9,7 @@ class Schichtplan(models.Model):
     schicht = models.ForeignKey('Schichten',
                                 null=True,
                                 on_delete=models.SET_NULL)
+    schichtmeister = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.datum)
