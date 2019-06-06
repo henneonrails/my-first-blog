@@ -7,10 +7,18 @@ from .models import Schichtplan, Schichten
 
 
 def schichtplan_list(request):
-    today = datetime.date.today()
-    dateSet = buildDateArray(today)
+    # dateSet = buildDateArray(today)
+    dateSet = Schichtplan.objects.all()
     context = {'dateSet': dateSet}
     template = 'schichtplan/list.html'
+    return render(request, template, context)
+
+
+def schichtplan_today(request):
+    today = datetime.date.today()
+    dateSet = searchShiftForDate(today)
+    context = {'dateSet': dateSet}
+    template = 'schichtplan/today.html'
     return render(request, template, context)
 
 
@@ -32,5 +40,22 @@ def buildDateArray(date):
     while date != dateNew:
         returnDates.append(date)
         date = date + timedelta(days=1)
-
     return returnDates
+
+
+def searchShiftForDate(date):
+    numberOfSchiftdays = len(Schichtplan.objects.all())
+    interval = timedelta(days=numberOfSchiftdays)
+    schichtplan = Schichtplan.objects.filter(datum=date)
+    print(date)
+    if schichtplan:
+        print(schichtplan)
+        return schichtplan
+
+    # Überprüfe ob übergebenes Datum ist kleiner als das Datum
+    # des ersten Schichtplandatums
+    myquery = Schichtplan.objects.order_by('datum')[0]
+    if date < myquery.datum:
+        searchShiftForDate(date + interval)
+    else:
+        searchShiftForDate(date - interval)
