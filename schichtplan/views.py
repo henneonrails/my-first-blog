@@ -1,10 +1,12 @@
 from django.shortcuts import render
 import datetime
 from datetime import timedelta, date
+
 import calendar
 
 
 from .models import Schichtplan, Schichten
+from .forms import SchichtplanForm
 
 
 def schichtplan_list(request):
@@ -17,13 +19,20 @@ def schichtplan_list(request):
 
 def schichtplan_today(request):
     today = datetime.date.today()
+    if request.POST:
+        form = SchichtplanForm(request.POST)
+        if form.is_valid():
+            today = form.cleaned_data['datum']
+    else:
+        form = SchichtplanForm()
     dateSet = calculateShiftForDate(today)
     newContext = html_forSchichtplan(dateSet)
     # print(newContext)
     context = {
                 'dateSet': dateSet,
                 'newDateSet': newContext[0],
-                'newSchichtSet': newContext[1]
+                'newSchichtSet': newContext[1],
+                'form': form
                 }
     template = 'schichtplan/today.html'
     return render(request, template, context)
@@ -32,9 +41,9 @@ def schichtplan_today(request):
 def html_forSchichtplan(dataSet):
     newDataSetForDates = []
     newDataSetForSchicht = []
-    for data in dataSet:
+    for index, data in enumerate(dataSet):
         datum = data.datum
-        formatedDate = datum.strftime("%d.%m.%Y")
+        formatedDate = datum.strftime("%d.%m.%y")
         schicht = data.schicht
         if datum == date.today():
             dateString = f"<td class=\"text-success\"> {formatedDate} </td>"
@@ -79,10 +88,10 @@ def searchShiftForDate(date):
     numberOfSchiftdays = len(Schichtplan.objects.all())
     interval = timedelta(days=numberOfSchiftdays)
     schichtplan = Schichtplan.objects.filter(datum=date)
-    print(date)
+    # print(date)
     if schichtplan:
-        print('return value')
-        print(schichtplan.first().schicht)
+        # print('return value')
+        # print(schichtplan.first().schicht)
         return schichtplan.first().schicht
 
     # Überprüfe ob übergebenes Datum ist kleiner als das Datum
