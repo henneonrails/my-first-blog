@@ -4,19 +4,22 @@
 <h2>Aktuelle Schicht</h2>
 <div class="row">
 
-
   <div class="col-sm-4">
     <table class="table table-bordered">
       <tr>
-        {% for date in dateSet %}
-        <td>{{ date.datum  }}</td>
+        {% for date in newDateSet %}
+            {{ date|safe  }}
         {% endfor %}
       </tr>
-      
+
 
       <tr>
         {% for date in dateSet %}
-        <td>{{ date.schicht }}</td>
+          {% if date.schicht in "S"  %}
+            <td class="text-danger">{{ date.schicht }}</td>
+          {% else %}
+            <td class="text-primary">{{ date.schicht }}</td>
+          {% endif %}
         {% endfor %}
       </tr>
 
