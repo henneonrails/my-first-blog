@@ -3,28 +3,30 @@
 {% block content %}
 <h2>Aktuelle Schicht</h2>
 <div class="row">
-  <form method='POST'> {% csrf_token %}
-    {{ form.datum }}
-    <button type="submit">OK</button>
-  </form>
+  <div class="col-sm-4">
+    <form method='POST'> {% csrf_token %}
+      {{ form.datum }}
+      <button type="submit">OK</button>
+    </form>
+  </div>
 </div>
 <div class="row">
   <div class="col-sm-4">
     <table class="table table-bordered">
       <tr>
         {% for date in newDateSet %}
-            {{ date|safe  }}
+        {{ date|safe  }}
         {% endfor %}
       </tr>
 
 
       <tr>
         {% for date in dateSet %}
-          {% if date.schicht in "S"  %}
-            <td class="text-danger">{{ date.schicht }}</td>
-          {% else %}
-            <td class="text-primary">{{ date.schicht }}</td>
-          {% endif %}
+        {% if date.schicht in "S"  %}
+        <td class="text-danger">{{ date.schicht }}</td>
+        {% else %}
+        <td class="text-primary">{{ date.schicht }}</td>
+        {% endif %}
         {% endfor %}
       </tr>
 
