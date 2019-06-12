@@ -28,11 +28,11 @@ def schichtplan_today(request):
     dateSet = calculateShiftForDate(today)
     newContext = html_forSchichtplan(dateSet)
     # print(newContext)
+    # cal = calendar.LocaleHTMLCalendar(locale='de_DE')
+    # html = cal.formatmonth(2019, 6)
     context = {
-                'dateSet': dateSet,
-                'newDateSet': newContext[0],
-                'newSchichtSet': newContext[1],
-                'form': form
+                'newDateSet': newContext,
+                'form': form,
                 }
     template = 'schichtplan/today.html'
     return render(request, template, context)
@@ -41,7 +41,8 @@ def schichtplan_today(request):
 def html_forSchichtplan(dataSet):
     newDataSetForDates = []
     newDataSetForSchicht = []
-    for index, data in enumerate(dataSet):
+    completeDataSet = []
+    for data in dataSet:
         datum = data.datum
         formatedDate = datum.strftime("%d.%m.%y")
         schicht = data.schicht
@@ -49,11 +50,28 @@ def html_forSchichtplan(dataSet):
             dateString = f"<td class=\"text-success\"> {formatedDate} </td>"
         else:
             dateString = f"<td> {formatedDate} </td>"
+        
         schicht = f"<td> {schicht} </td>"
-        newDataSetForDates.append(dateString)
-        newDataSetForSchicht.append(schicht)
-    return [newDataSetForDates, newDataSetForSchicht]
-
+        if datum.weekday() == 6:
+            dateString = dateString + "</tr><tr>"
+            schicht = schicht + "</tr><tr>"
+            newDataSetForDates.append(dateString)
+            newDataSetForSchicht.append(schicht)
+            completeDataSet.append(''.join(newDataSetForDates))
+            completeDataSet.append(''.join(newDataSetForSchicht))
+            newDataSetForDates.clear()
+            newDataSetForSchicht.clear()
+        else:
+            newDataSetForDates.append(dateString)
+            newDataSetForSchicht.append(schicht)
+    
+    dateString = dateString + "</tr><tr>"
+    schicht = schicht + "</tr><tr>"
+    newDataSetForDates.append(dateString)
+    newDataSetForSchicht.append(schicht)
+    completeDataSet.append(''.join(newDataSetForDates))
+    completeDataSet.append(''.join(newDataSetForSchicht))
+    return completeDataSet
 
 def schichtplan_detail(request):
     return 0
