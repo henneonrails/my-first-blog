@@ -3,19 +3,19 @@
 {% block content %}
 <h2>Aktuelle Schicht</h2>
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-md-8">
     <form method='POST'> {% csrf_token %}
-      {{ form.datum }}
+      {{ form }}
       <button type="submit">OK</button>
     </form>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-md-4">
     <table class="table table-bordered">
       <tr>
         {% for date in newDateSet %}
-            {{ date|safe  }}
+        {{ date|safe  }}
         {% endfor %}
       </tr>
     </table>

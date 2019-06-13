@@ -1,7 +1,11 @@
+# encoding: utf-8
+
 from django.shortcuts import render
-import datetime
+from django.http import HttpResponse
 from datetime import timedelta, date
 
+
+import datetime
 import calendar
 
 
@@ -50,8 +54,8 @@ def html_forSchichtplan(dataSet):
             dateString = f"<td class=\"text-success\"> {formatedDate} </td>"
         else:
             dateString = f"<td> {formatedDate} </td>"
-        
-        schicht = f"<td> {schicht} </td>"
+        schicht = setColor(schicht)
+        # schicht = f"<td> {schicht} </td>"
         if datum.weekday() == 6:
             dateString = dateString + "</tr><tr>"
             schicht = schicht + "</tr><tr>"
@@ -72,6 +76,15 @@ def html_forSchichtplan(dataSet):
     completeDataSet.append(''.join(newDataSetForDates))
     completeDataSet.append(''.join(newDataSetForSchicht))
     return completeDataSet
+
+
+def setColor(schicht):
+    if schicht.schicht == "Früh":
+        schicht = f"<td bgcolor='#F9E79F'> {schicht} </td>"
+    else:
+       schicht = f"<td> {schicht} </td>"
+    return schicht
+
 
 def schichtplan_detail(request):
     return 0
