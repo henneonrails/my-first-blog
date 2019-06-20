@@ -2,9 +2,10 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils import timezone
 from datetime import timedelta, date
 
-
+import locale
 import datetime
 import calendar
 
@@ -46,14 +47,16 @@ def html_forSchichtplan(dataSet):
     newDataSetForDates = []
     newDataSetForSchicht = []
     completeDataSet = []
+    locale.setlocale(locale.LC_ALL, 'de_DE')
     for data in dataSet:
         datum = data.datum
         formatedDate = datum.strftime("%d.%m.%y")
+        day_of_week = calendar.day_name[datum.weekday()]
         schicht = data.schicht
         if datum == date.today():
             dateString = f"<td class=\"text-success\"> {formatedDate} </td>"
         else:
-            dateString = f"<td> {formatedDate} </td>"
+            dateString = f"<td class'col-4'> {formatedDate} <p> {day_of_week} </p></td>"
         schicht = setColor(schicht)
         # schicht = f"<td> {schicht} </td>"
         if datum.weekday() == 6:
@@ -79,8 +82,14 @@ def html_forSchichtplan(dataSet):
 
 
 def setColor(schicht):
-    if schicht.schicht == "Früh":
+    if schicht.schicht == "Früh" or schicht.schicht == "Früh12":
         schicht = f"<td bgcolor='#F9E79F'> {schicht} </td>"
+    elif schicht.schicht == "Spät":
+        schicht = f"<td bgcolor='#e24d7f'> {schicht} </td>"
+    elif schicht.schicht == "Nacht" or schicht.schicht == "Nacht12":
+        schicht = f"<td bgcolor='#4286f4'> {schicht} </td>"
+    elif schicht.schicht == "Vario":
+        schicht = f"<td bgcolor='#e5bcc9'> {schicht} </td>"
     else:
        schicht = f"<td> {schicht} </td>"
     return schicht

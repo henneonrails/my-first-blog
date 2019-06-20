@@ -14,12 +14,19 @@ class Schichtplan(models.Model):
     def __str__(self):
         return str(self.datum)
 
+    class Meta:
+        verbose_name = 'Schichtplan'
+        verbose_name_plural = 'Schichtpläne'
 
 class Schichten(models.Model):
     schicht = models.CharField(max_length=15)
 
     def __str__(self):
         return self.schicht
+
+    class Meta:
+        verbose_name = 'Schicht'
+        verbose_name_plural = 'Schichten'
 
 
 '''
